@@ -3,13 +3,13 @@ import 'package:habitual/src/systems/habit_data/habit_data_controller.dart';
 import 'package:habitual/src/systems/habit_data/habit_model.dart';
 
 class FrequencyFilterChips extends StatefulWidget {
-  FrequencyFilterChips({
+  const FrequencyFilterChips({
     super.key,
     required this.onFrequencyChange,
     required this.habitDataController,
   });
 
-  Function(List<Frequency> frequencies) onFrequencyChange;
+  final Function(List<Frequency> frequencies) onFrequencyChange;
   final HabitDataController habitDataController;
 
   @override

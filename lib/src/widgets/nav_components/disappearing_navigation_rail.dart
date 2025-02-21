@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:habitual/src/widgets/animations/slide_in.dart';
 
 class DisappearingNavigationRail extends StatefulWidget {
   const DisappearingNavigationRail({
