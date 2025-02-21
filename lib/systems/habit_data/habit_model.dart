@@ -10,7 +10,7 @@ enum Frequency {
   weekly,
   monthly,
   // quarterly,
-  yearly,
+  // yearly,
 }
 
 enum DurationType {
@@ -32,8 +32,9 @@ class Habit {
 
   factory Habit.fromJson(String json) {
     Map<String, dynamic> habitData = jsonDecode(json);
+    List<dynamic> jsonDates = jsonDecode(habitData['datesCompleted']);
 
-    List<int> dates = habitData['datesCompleted'] != null ? List.from(habitData['datesCompleted'], growable: true) : List.empty(growable: true);
+    List<int> dates = jsonDates.isNotEmpty ? List.from(jsonDates.cast(), growable: true) : List.empty(growable: true);
 
     return Habit(
       habitData['id'],
@@ -235,8 +236,6 @@ class Habit {
     return 0;
   }
 
-
-
   bool completed(DateTime checkDate) {
     if (datesCompleted.isEmpty) return false;
 
@@ -246,7 +245,7 @@ class Habit {
     int currentDate = dateTimeToInt(today);
 
     int firstOfYear = today.year * 10000;
-    int endOfYear = (today.year + 1) * 10000;
+    // int endOfYear = (today.year + 1) * 10000;
     // int firstOfQuarter = firstOfYear + ((today.month / 3).ceil() * 100);
     int firstOfMonth = firstOfYear + (today.month * 100);
     int endOfMonth = firstOfMonth + 31;
@@ -260,8 +259,8 @@ class Habit {
         return datesCompleted.where((date) => date >= firstOfWeek && date <= endOfWeek).isNotEmpty;
       case Frequency.monthly:
         return datesCompleted.where((date) => date >= firstOfMonth && date <= endOfMonth).isNotEmpty;
-      case Frequency.yearly:
-        return datesCompleted.where((date) => date >= firstOfYear && date <= endOfYear).isNotEmpty;
+      // case Frequency.yearly:
+      //   return datesCompleted.where((date) => date >= firstOfYear && date <= endOfYear).isNotEmpty;
       default:
         return false;
     }

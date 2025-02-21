@@ -22,4 +22,4 @@ flutter build [your_device_type]
 ```
 
 ## Version
-1.0
+1.1

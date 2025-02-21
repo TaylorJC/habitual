@@ -85,7 +85,12 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
 
   void _unfill() {
     _fillCompleteController.reset();
-    _longFillController.reverse().whenComplete(() => widget.selectedHabit.decrement(widget.selectedDate));
+    _longFillController.reverse().whenComplete(
+      () {
+        widget.selectedHabit.decrement(widget.selectedDate);
+        widget.habitDataController.updateHabit(widget.selectedHabit);
+    });
+
   }
 
   void _startLongFill() {
@@ -96,7 +101,10 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
 
   void _endLongFill() {
     if (_longFillController.value >= 1.0) {
-      _fillCompleteController.forward().whenComplete(() => widget.selectedHabit.increment(widget.selectedDate));
+      _fillCompleteController.forward().whenComplete(() { widget.selectedHabit.increment(widget.selectedDate);
+              widget.habitDataController.updateHabit(widget.selectedHabit);
+      });
+
     } else {
       _longFillController.reverse();
       _fillCompleteController.reset();

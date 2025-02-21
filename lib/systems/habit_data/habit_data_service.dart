@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HabitDataService {
   /// Loads the User's preferred ThemeMode from local or remote storage.
   Future<HashMap<int, Habit>> getUserHabits() async {
-    final SharedPreferencesWithCache prefs = await SharedPreferencesWithCache.create(cacheOptions: SharedPreferencesWithCacheOptions());
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     // prefs.clear();
 
@@ -49,7 +49,9 @@ class HabitDataService {
     if (habitIds == null) {
       habitIds = {habitId}.toList();
     } else {
-      habitIds.add(habitId);
+      if (!habitIds.contains(habitId)) {
+        habitIds.add(habitId);
+      }
     }
 
     prefs.setStringList('habits', habitIds);
