@@ -1,3 +1,5 @@
+<p style="text-align: center;"><img  src="./assets/habitual_icon.png" alt="Icon" width="50"/></p>
+
 # <p style="text-align: center;">Habitual</p>
 
 Make growth *habitual*.
