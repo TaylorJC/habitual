@@ -117,7 +117,7 @@ class HabitualState extends State<Habitual> with SingleTickerProviderStateMixin 
                       ),
                     Expanded(
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(0.0, 10, 0, 0),
+                        padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
                         child: Card(
                           child: Builder(builder: (context) {
                             if (_state == AppState.addForm) {
