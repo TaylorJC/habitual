@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:habitual/src/systems/settings/settings_controller.dart';
-import 'package:habitual/src/widgets/animations/slide_in.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({

@@ -39,7 +39,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
         children: [
           if (widget.habitDataController.frequencyCount(Frequency.daily) > 0)
             FilterChip.elevated(
-              label: Text('Daily'), 
+              label: Text('Daily', style: TextStyle(fontSize: 14),), 
               showCheckmark: false,
               selected: selectedFrequencies.contains(Frequency.daily),
               onSelected: (selected) {
@@ -57,7 +57,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
             ),
           if (widget.habitDataController.frequencyCount(Frequency.weekly) > 0)
             FilterChip.elevated(
-              label: Text('Weekly'), 
+              label: Text('Weekly', style: TextStyle(fontSize: 14)), 
               showCheckmark: false,
               selected: selectedFrequencies.contains(Frequency.weekly),
               onSelected: (selected) {
@@ -75,7 +75,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
             ),
           if (widget.habitDataController.frequencyCount(Frequency.monthly) > 0)
             FilterChip.elevated(
-              label: Text('Monthly'),
+              label: Text('Monthly', style: TextStyle(fontSize: 14)),
               showCheckmark: false, 
               selected: selectedFrequencies.contains(Frequency.monthly),
               onSelected: (selected) {

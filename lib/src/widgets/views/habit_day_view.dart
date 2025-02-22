@@ -196,6 +196,7 @@ class HabitDayViewState extends State<HabitDayView>
                               _updateList();
                             },
                             habitDataController: widget.habitDataController),
+                        Spacer(),
                         if (_selectedDate.difference(DateTime.now()).inDays < 0)
                           Card(
                             color: colorScheme.secondaryContainer,
@@ -204,17 +205,17 @@ class HabitDayViewState extends State<HabitDayView>
                               child: Flex(
                                 direction: Axis.vertical,
                                 children: [
-                                  Text(
-                                    'Viewing: ',
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        color:
-                                            colorScheme.onSecondaryContainer),
-                                  ),
+                                  // Text(
+                                  //   'Viewing: ',
+                                  //   style: TextStyle(
+                                  //       fontSize: 8,
+                                  //       color:
+                                  //           colorScheme.onSecondaryContainer),
+                                  // ),
                                   Text(
                                     '${_selectedDate.year} - ${_selectedDate.month} - ${_selectedDate.day}',
                                     style: TextStyle(
-                                        fontSize: 12,
+                                        fontSize: 10,
                                         color:
                                             colorScheme.onSecondaryContainer),
                                   ),

@@ -33,29 +33,29 @@ class _FrequencyFilterButtonsState extends State<FrequencyFilterButtons> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(0.0),
       child: SegmentedButton(
         segments: <ButtonSegment<Frequency>>[
           ButtonSegment<Frequency>(
             value: Frequency.all,
-            label: Text('All', overflow: TextOverflow.fade, maxLines: 1, softWrap: false,),
+            label: Text('All', overflow: TextOverflow.fade, maxLines: 1, softWrap: false, style: TextStyle(fontSize: 12)),
             icon: Icon(Icons.view_compact),
           ),
           ButtonSegment<Frequency>(
             value: Frequency.daily,
-            label: Text('Daily', overflow: TextOverflow.fade, maxLines: 1, softWrap: false,),
+            label: Text('Daily', overflow: TextOverflow.fade, maxLines: 1, softWrap: false, style: TextStyle(fontSize: 12)),
             icon: Icon(Icons.view_agenda_outlined),
             enabled: widget.habitDataController.frequencyCount(Frequency.daily) > 0,
           ),
           ButtonSegment<Frequency>(
             value: Frequency.weekly,
-            label: Text('Weekly', overflow: TextOverflow.fade, maxLines: 1, softWrap: false,),
+            label: Text('Weekly', overflow: TextOverflow.fade, maxLines: 1, softWrap: false, style: TextStyle(fontSize: 12)),
             icon: Icon(Icons.view_week_outlined),
             enabled: widget.habitDataController.frequencyCount(Frequency.weekly) > 0,
           ),
           ButtonSegment<Frequency>(
             value: Frequency.monthly,
-            label: Text('Monthly', overflow: TextOverflow.fade, maxLines: 1, softWrap: false,),
+            label: Text('Monthly', overflow: TextOverflow.fade, maxLines: 1, softWrap: false, style: TextStyle(fontSize: 12)),
             icon: Icon(Icons.grid_view),
             enabled: widget.habitDataController.frequencyCount(Frequency.monthly) > 0,
           ),
