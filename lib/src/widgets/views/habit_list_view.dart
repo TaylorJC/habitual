@@ -182,9 +182,6 @@ class HabitsViewState extends State<HabitsView> with TickerProviderStateMixin {
                 },
                 onTap: () {
                   widget.onHabitSelected(userHabits[i]);
-                  // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  //   return HabitHistoryView(habit: userHabits[i]);
-                  // }));
                 },
                 child: Container(
                   margin: EdgeInsets.all(16.0),
@@ -193,20 +190,24 @@ class HabitsViewState extends State<HabitsView> with TickerProviderStateMixin {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       habitIcon,
-                      Column(
-                        children: [
-                          Text(userHabits[i].title,
-                              maxLines: 2,
-                              style: TextStyle(
-                                  color: colorScheme.onPrimaryContainer,
-                                  fontSize: 16)),
-                          if (userHabits[i].duration != null)
-                            Text('${userHabits[i].duration} ${userHabits[i].durationType.name}',
-                              maxLines: 2,
-                              style: TextStyle(
-                                  color: colorScheme.onPrimaryContainer,
-                                  fontSize: 12)),
-                        ],
+                      SizedBox(
+                        width: 100,
+                        child: Column(
+                          children: [
+                            Text(userHabits[i].title,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: colorScheme.onPrimaryContainer,
+                                    fontSize: 14)),
+                            if (userHabits[i].duration != null)
+                              Text('${userHabits[i].duration} ${userHabits[i].durationType.name}',
+                                maxLines: 2,
+                                style: TextStyle(
+                                    color: colorScheme.onPrimaryContainer,
+                                    fontSize: 12)),
+                          ],
+                        ),
                       ),
                       Card(
                           color: colorScheme.primaryContainer,

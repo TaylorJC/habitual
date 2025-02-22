@@ -31,6 +31,7 @@ class _HabitTimerViewState extends State<HabitTimerView>
   void initState() {
     _countDownController = CountDownController();
 
+
     final int durationLen = widget.habit.duration!;
     switch (widget.habit.durationType) {
       case DurationType.hours:
@@ -43,6 +44,8 @@ class _HabitTimerViewState extends State<HabitTimerView>
         habitDuration = durationLen;
         break;
     }
+
+
 
     _animationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 500))
@@ -66,6 +69,7 @@ class _HabitTimerViewState extends State<HabitTimerView>
   @override
   Widget build(BuildContext context) {
     colorScheme = Theme.of(context).colorScheme;
+
     return Center(
       child: SingleChildScrollView(
         child: SizedBox(
@@ -138,12 +142,12 @@ class _HabitTimerViewState extends State<HabitTimerView>
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(24.0),
-                            child: _countDownController.getTime() != '0' ?  Column(
+                            child: _countDownController.getTime() != '0' || !_countDownController.isStarted.value ?  Column(
                               children: [
                                   CircularCountDownTimer(
                                     controller: _countDownController,
-                                    width: 200,
-                                    height: 200,
+                                    width: MediaQuery.of(context).size.shortestSide / 3,
+                                    height: MediaQuery.of(context).size.shortestSide / 3,
                                     autoStart: false,
                                     isReverse: true,
                                     isReverseAnimation: false,

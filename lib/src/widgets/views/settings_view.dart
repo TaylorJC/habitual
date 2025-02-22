@@ -19,10 +19,12 @@ class SettingsView extends StatefulWidget {
 }
 
 
-class SettingsViewState extends State<SettingsView> {
+class SettingsViewState extends State<SettingsView> with SingleTickerProviderStateMixin{
   final TextStyle optionStyle = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
   final TextStyle titleStyle = TextStyle(fontSize: 18, fontWeight: FontWeight.bold);
   final int colorCount = 4;
+
+  late AnimationController _animationController;
 
   final List<String> colorChoiceNames = List.from(
     {
@@ -56,12 +58,15 @@ class SettingsViewState extends State<SettingsView> {
 
   @override
   void initState() {
+    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 600))..forward();
+
     super.initState();
 
   }
 
   @override
   void dispose() {
+    _animationController.dispose();
     super.dispose();
   }
 
@@ -69,9 +74,22 @@ class SettingsViewState extends State<SettingsView> {
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
 
-    return SlideIn(
-      slideInDirection: AxisDirection.right,
-      animationCurve: Curves.fastEaseInToSlowEaseOut,
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        final animationPercent =
+            Curves.easeOut.transform(_animationController.value);
+        final opacity = animationPercent;
+        final slideDistance = (1.0 - animationPercent) * 150;
+
+        return Opacity(
+          opacity: opacity,
+          child: Transform.translate(
+            offset: Offset(slideDistance, 0),
+            child: child,
+          ),
+        );
+      },
       child: Card(
         margin: EdgeInsets.all(24),
         child: Padding(

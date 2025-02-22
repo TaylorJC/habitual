@@ -231,6 +231,7 @@ class AddHabitFormState extends State<AddHabitForm> with SingleTickerProviderSta
                                         padding: const EdgeInsets.all(16.0),
                                         child: TextFormField(
                                           controller: durationController,
+                                          maxLength: 4,
                                           keyboardType: TextInputType.number,
                                           decoration: InputDecoration(
                                             border: UnderlineInputBorder(),

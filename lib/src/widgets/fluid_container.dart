@@ -124,7 +124,7 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextStyle onPrimaryStyle = TextStyle(
-      fontSize: 16, 
+      fontSize: 14, 
       fontWeight: FontWeight.bold,
       color: colorScheme.onPrimary,
       overflow: TextOverflow.ellipsis,
@@ -136,76 +136,79 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
         onTap: _onTap,
         onLongPress: _startLongFill,
         // onLongPressUp: _endLongFill,
-        child: Center(
-          child: Stack(
-            children: [
-              if (widget.selectedHabit.frequency == Frequency.weekly)
-                WaterDropBurst(
-                  fillCompleteController: _fillCompleteController, 
-                  colorScheme: colorScheme, 
-                  count: 16, 
-                  size: 12.0, 
-                  distance: 1.4,
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: Center(
+            child: Stack(
+              children: [
+                if (widget.selectedHabit.frequency == Frequency.weekly)
+                  WaterDropBurst(
+                    fillCompleteController: _fillCompleteController, 
+                    colorScheme: colorScheme, 
+                    count: 16, 
+                    size: 12.0, 
+                    distance: 1.4,
+                  ),
+                
+                if (widget.selectedHabit.frequency == Frequency.daily)
+                  WaterDropBurst(
+                    fillCompleteController: _fillCompleteController, 
+                    colorScheme: colorScheme, 
+                    count: 16, 
+                    size: 12.0, 
+                    distance: 1.2,
+                  ),
+          
+                if (widget.selectedHabit.frequency == Frequency.monthly)
+                  WaterDropBurst(
+                    fillCompleteController: _fillCompleteController, 
+                    colorScheme: colorScheme, 
+                    count: 16, 
+                    size: 12.0, 
+                    distance: 1.2,
+                  ),
+          
+                AnimatedBuilder(
+                  animation: _longFillController,
+                  builder: (context, child) => FluidFilledContainer(
+                    shape: widget.shape,
+                    fillController: _longFillController, 
+                    waveController: _waveController, 
+                    colorScheme: colorScheme
+                  ),
                 ),
-              
-              if (widget.selectedHabit.frequency == Frequency.daily)
-                WaterDropBurst(
-                  fillCompleteController: _fillCompleteController, 
-                  colorScheme: colorScheme, 
-                  count: 16, 
-                  size: 12.0, 
-                  distance: 1.2,
-                ),
-
-              if (widget.selectedHabit.frequency == Frequency.monthly)
-                WaterDropBurst(
-                  fillCompleteController: _fillCompleteController, 
-                  colorScheme: colorScheme, 
-                  count: 16, 
-                  size: 12.0, 
-                  distance: 1.2,
-                ),
-
-              AnimatedBuilder(
-                animation: _longFillController,
-                builder: (context, child) => FluidFilledContainer(
-                  shape: widget.shape,
-                  fillController: _longFillController, 
-                  waveController: _waveController, 
-                  colorScheme: colorScheme
-                ),
-              ),
-              Center(
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: IgnorePointer(
-                    child: Container(
-                      padding: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: colorScheme.primary,
+                Center(
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: IgnorePointer(
+                      child: Container(
+                        padding: EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: colorScheme.primary,
+                        ),
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints.loose(Size.square(80)),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(widget.selectedHabit.title, style: onPrimaryStyle, maxLines: 3,),
+                              if (widget.selectedHabit.duration != null)
+                                Text('${widget.selectedHabit.duration} ${widget.selectedHabit.durationType.name}', style: TextStyle(
+                fontSize: 12, 
+                fontWeight: FontWeight.bold,
+                color: colorScheme.onPrimary,
+                overflow: TextOverflow.ellipsis,
+              ), maxLines: 1,),
+                            ],
+                          )),
                       ),
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints.loose(Size.square(100)),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(widget.selectedHabit.title, style: onPrimaryStyle, maxLines: 3,),
-                            if (widget.selectedHabit.duration != null)
-                              Text('${widget.selectedHabit.duration} ${widget.selectedHabit.durationType.name}', style: TextStyle(
-      fontSize: 12, 
-      fontWeight: FontWeight.bold,
-      color: colorScheme.onPrimary,
-      overflow: TextOverflow.ellipsis,
-    ), maxLines: 1,),
-                          ],
-                        )),
                     ),
                   ),
                 ),
-              ),
-            ]
+              ]
+            ),
           ),
         ),
       ),

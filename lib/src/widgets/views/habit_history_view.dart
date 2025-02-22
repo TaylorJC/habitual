@@ -98,10 +98,13 @@ class _HabitHistoryViewState extends State<HabitHistoryView>
                       label: Icon(Icons.close, color: colorScheme.onSurface),
                     ),
                   ),
-                  Text(widget.habit.title,
-                      maxLines: 2,
-                      style: TextStyle(
-                          color: colorScheme.onPrimaryContainer, fontSize: 16)),
+                  SizedBox(
+                    width: 200,
+                    child: Text(widget.habit.title,
+                        maxLines: 3,
+                        style: TextStyle(
+                            color: colorScheme.onPrimaryContainer, fontSize: 16)),
+                  ),
                   if (widget.habit.duration != null)
                     Text(
                         '${widget.habit.duration} ${widget.habit.durationType.name}',
@@ -165,7 +168,7 @@ class _HabitHistoryViewState extends State<HabitHistoryView>
                             fontSize: 14,
                             size: 26,
                             monthFontSize: 14,
-                            weekFontSize: 12,
+                            weekFontSize: 10,
                             defaultColor: colorScheme.surfaceContainer,
                             colorsets: {1: colorScheme.primary},
                             textColor: colorScheme.onSurface,

@@ -64,6 +64,8 @@ class HabitDayViewState extends State<HabitDayView>
     shownHabits = widget.habitDataController.habitList.where((habit) {
         if (habit.dateCreated > selectedDateInt) return false;
         if (selectedFrequencies.contains(Frequency.all)) return true;
+        if (selectedFrequencies.isEmpty) return true;
+
         return selectedFrequencies.contains(habit.frequency);
       }).toList();
 
@@ -81,6 +83,7 @@ class HabitDayViewState extends State<HabitDayView>
       ColorScheme colorScheme = Theme.of(context).colorScheme;
 
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -101,6 +104,7 @@ class HabitDayViewState extends State<HabitDayView>
                 );
               },
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (_showDates)
                     AnimatedBuilder(
@@ -229,12 +233,14 @@ class HabitDayViewState extends State<HabitDayView>
             ),
           ),
           Expanded(
-              child: BubbleGrid(
-            selectedDate: _selectedDate,
-            shownHabits: shownHabits,
-            columnCount: columnCount,
-            widget: widget,
-          )),
+            child: SingleChildScrollView(
+                child: BubbleGrid(
+              selectedDate: _selectedDate,
+              shownHabits: shownHabits,
+              columnCount: columnCount,
+              widget: widget,
+            )),
+          ),
         ],
       );
     });
@@ -331,13 +337,22 @@ class BubbleGridState extends State<BubbleGrid>
               ),
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 16),
-            child: NamedFluidCircle(
-                key: UniqueKey(),
-                selectedDate: widget.selectedDate,
-                widget: widget.widget,
-                habit: widget.shownHabits[i]),
+          child: SizedBox(
+            height: 175,
+            width: 175,
+            child:         FluidFillingContainer(
+            shape: switch (widget.shownHabits[i].frequency) {
+              Frequency.daily => FluidContainerShape.circle,
+              Frequency.weekly => FluidContainerShape.roundedRectangle,
+              Frequency.monthly => FluidContainerShape.diamond,
+              _ => FluidContainerShape.roundedRectangle,
+            },
+            habitDataController: widget.widget.habitDataController,
+            selectedHabit: widget.shownHabits[i],
+            selectedDate: widget.selectedDate,
+            onTap: (habit) {
+              widget.widget.onHabitSelected(habit);
+            }),
           ),
         ),
       );
@@ -347,46 +362,13 @@ class BubbleGridState extends State<BubbleGrid>
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
-      crossAxisCount: widget.columnCount,
-      children: _buildListItems(),
-    );
-  }
-}
-
-class NamedFluidCircle extends StatelessWidget {
-  const NamedFluidCircle({
-    super.key,
-    required this.widget,
-    required this.habit,
-    required this.selectedDate,
-  });
-
-  final HabitDayView widget;
-  final Habit habit;
-  final DateTime selectedDate;
-
-  @override
-  Widget build(BuildContext context) {
-    // final ColorScheme colorScheme = Theme.of(context).colorScheme;
-
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Stack(alignment: Alignment.center, children: [
-        FluidFillingContainer(
-            shape: switch (habit.frequency) {
-              Frequency.daily => FluidContainerShape.circle,
-              Frequency.weekly => FluidContainerShape.roundedRectangle,
-              Frequency.monthly => FluidContainerShape.diamond,
-              _ => FluidContainerShape.roundedRectangle,
-            },
-            habitDataController: widget.habitDataController,
-            selectedHabit: habit,
-            selectedDate: selectedDate,
-            onTap: (habit) {
-              widget.onHabitSelected(habit);
-            }),
-      ]),
+      child: Wrap(
+        runSpacing: 16.0,
+        spacing: 16.0,
+        children: _buildListItems(),
+      ),
     );
   }
 }

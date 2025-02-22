@@ -9,6 +9,7 @@ enum AnimationDirection {
 class SlideIn extends StatefulWidget {
   const SlideIn({
     super.key,
+    this.animationController,
     this.animationCurve = Curves.fastOutSlowIn,
     this.duration = const Duration(milliseconds: 600),
     this.slideInDirection = AxisDirection.right,
@@ -19,6 +20,7 @@ class SlideIn extends StatefulWidget {
     required this.child,
   });
 
+  final AnimationController? animationController;
   /// Curve to apply to the animation, default is FastOutSlowIn
   final Curve animationCurve;
   /// Duration of the animation, default is 800 milliseconds
@@ -46,15 +48,20 @@ class _SlideInState extends State<SlideIn>
 
   @override
   void initState() {
-    super.initState();
-    _controller = AnimationController(
+    if (widget.animationController != null) {
+      _controller = widget.animationController!;
+    } else {
+      _controller = AnimationController(
       vsync: this,
       duration: widget.duration,
     );
+    }
 
     _statusListener = forwardStatus;
 
     _controller.addStatusListener(_statusListener);
+
+    super.initState();
   }
 
   @override
