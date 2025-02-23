@@ -66,4 +66,4 @@ While this was developed as a learning experience for the Flutter framework and 
 
 ## Version
 
-1.1.2
+1.1.3

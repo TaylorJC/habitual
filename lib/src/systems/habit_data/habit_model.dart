@@ -176,64 +176,39 @@ class Habit {
     int currentStreak = 1;
     int maxStreak = 0;
 
-    if (frequency == Frequency.daily) {
-      // Naive linear search. 
-      DateTime currentDate = intToDateTime(datesCompleted.first);
+    DateTime currentDate = intToDateTime(datesCompleted.first);
 
-      for (int i = 0; i < datesCompleted.length - 1; ++i) {
-        DateTime nextDate = intToDateTime(datesCompleted[i + 1]);
-
-        if (nextDate == currentDate.add(Duration(days: 1))) {
-          currentStreak += 1;
-          currentDate = nextDate;
-        } else {
-          if (currentStreak > maxStreak) {
-            maxStreak = currentStreak;
-          }
-          currentStreak = 1;
-        }
+    for (int i = 0; i < datesCompleted.length - 1; ++i) {
+      DateTime nextDate = intToDateTime(datesCompleted[i + 1]);
+      bool check = false;
+      switch (frequency) {
+        case Frequency.daily:
+          nextDate == currentDate.add(Duration(days: 1));
+        break;
+        case Frequency.weekly:
+          check = isInNextWeek(currentDate, nextDate);
+        break;
+        case Frequency.monthly:
+          check = isInNextMonth(currentDate, nextDate);
+        break;
+        default:
       }
-      return maxStreak;
-    } else if (frequency == Frequency.weekly) {
-      DateTime currentDate = intToDateTime(datesCompleted.first);
 
-      for (int i = 0; i < datesCompleted.length - 1; ++i) {
-        DateTime nextDate = intToDateTime(datesCompleted[i + 1]);
-
-        if (isInNextWeek(currentDate, nextDate)) {
-          currentStreak += 1;
-          currentDate = nextDate;
-        } else {
-          if (currentStreak > maxStreak) {
-            maxStreak = currentStreak;
-          }
-          currentStreak = 1;
+      if (check) {
+        currentStreak += 1;
+        currentDate = nextDate;
+        if (currentStreak > maxStreak) {
+          maxStreak = currentStreak;
         }
-      }
-      return maxStreak;
-    } else if (frequency == Frequency.monthly) {
-      DateTime currentDate = intToDateTime(datesCompleted.first);
-
-      for (int i = 0; i < datesCompleted.length - 1; ++i) {
-        DateTime nextDate = intToDateTime(datesCompleted[i + 1]);
-
-        if (isInNextMonth(currentDate, nextDate)) {
-          currentStreak += 1;
-          currentDate = nextDate;
-
-          if (currentStreak > maxStreak) {
-            maxStreak = currentStreak;
-          }
-        } else {
-          if (currentStreak > maxStreak) {
-            maxStreak = currentStreak;
-          }
-          currentStreak = 1;
+      } else {
+        if (currentStreak > maxStreak) {
+          maxStreak = currentStreak;
         }
+        currentStreak = 1;
       }
-      return maxStreak;
     }
-    return 0;
+    
+    return maxStreak;
   }
 
   bool completed(DateTime checkDate) {

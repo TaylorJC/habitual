@@ -100,10 +100,12 @@ class _HabitHistoryViewState extends State<HabitHistoryView>
                   ),
                   SizedBox(
                     width: 200,
-                    child: Text(widget.habit.title,
-                        maxLines: 3,
-                        style: TextStyle(
-                            color: colorScheme.onPrimaryContainer, fontSize: 16)),
+                    child: Center(
+                      child: Text(widget.habit.title,
+                          maxLines: 3,
+                          style: TextStyle(
+                              color: colorScheme.onPrimaryContainer, fontSize: 16)),
+                    ),
                   ),
                   if (widget.habit.duration != null)
                     Text(
