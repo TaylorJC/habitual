@@ -162,8 +162,12 @@ class HabitDayViewState extends State<HabitDayView>
                         child: child,
                       );
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                    child: Wrap(
+                      spacing: 8.0,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      alignment: WrapAlignment.center,
+                      runAlignment: WrapAlignment.center,
+                      runSpacing: 8.0,
                       children: [
                         IconButton(
                           onPressed: () {
@@ -196,30 +200,17 @@ class HabitDayViewState extends State<HabitDayView>
                               _updateList();
                             },
                             habitDataController: widget.habitDataController),
-                        Spacer(),
                         if (_selectedDate.difference(DateTime.now()).inDays < 0)
                           Card(
                             color: colorScheme.secondaryContainer,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Flex(
-                                direction: Axis.vertical,
-                                children: [
-                                  // Text(
-                                  //   'Viewing: ',
-                                  //   style: TextStyle(
-                                  //       fontSize: 8,
-                                  //       color:
-                                  //           colorScheme.onSecondaryContainer),
-                                  // ),
-                                  Text(
-                                    '${_selectedDate.year} - ${_selectedDate.month} - ${_selectedDate.day}',
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        color:
-                                            colorScheme.onSecondaryContainer),
-                                  ),
-                                ],
+                              child: Text(
+                                '${_selectedDate.year} - ${_selectedDate.month} - ${_selectedDate.day}',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color:
+                                        colorScheme.onSecondaryContainer),
                               ),
                             ),
                           ),
@@ -234,13 +225,12 @@ class HabitDayViewState extends State<HabitDayView>
             ),
           ),
           Expanded(
-            child: SingleChildScrollView(
-                child: BubbleGrid(
-              selectedDate: _selectedDate,
-              shownHabits: shownHabits,
-              columnCount: columnCount,
-              widget: widget,
-            )),
+            child: BubbleGrid(
+                          selectedDate: _selectedDate,
+                          shownHabits: shownHabits,
+                          columnCount: columnCount,
+                          widget: widget,
+                        ),
           ),
         ],
       );
@@ -319,6 +309,7 @@ class BubbleGridState extends State<BubbleGrid>
 
   List<Widget> _buildListItems() {
     final listItems = <Widget>[];
+
     for (var i = 0; i < widget.shownHabits.length; ++i) {
       listItems.add(
         AnimatedBuilder(
@@ -338,22 +329,22 @@ class BubbleGridState extends State<BubbleGrid>
               ),
             );
           },
-          child: SizedBox(
-            height: 175,
-            width: 175,
-            child:         FluidFillingContainer(
-            shape: switch (widget.shownHabits[i].frequency) {
-              Frequency.daily => FluidContainerShape.circle,
-              Frequency.weekly => FluidContainerShape.roundedRectangle,
-              Frequency.monthly => FluidContainerShape.diamond,
-              _ => FluidContainerShape.roundedRectangle,
-            },
-            habitDataController: widget.widget.habitDataController,
-            selectedHabit: widget.shownHabits[i],
-            selectedDate: widget.selectedDate,
-            onTap: (habit) {
-              widget.widget.onHabitSelected(habit);
-            }),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: FluidFillingContainer(
+            key: UniqueKey(),
+                        shape: switch (widget.shownHabits[i].frequency) {
+            Frequency.daily => FluidContainerShape.circle,
+            Frequency.weekly => FluidContainerShape.roundedRectangle,
+            Frequency.monthly => FluidContainerShape.diamond,
+            _ => FluidContainerShape.roundedRectangle,
+                        },
+                        habitDataController: widget.widget.habitDataController,
+                        selectedHabit: widget.shownHabits[i],
+                        selectedDate: widget.selectedDate,
+                        onTap: (habit) {
+            widget.widget.onHabitSelected(habit);
+                        }),
           ),
         ),
       );
@@ -361,15 +352,24 @@ class BubbleGridState extends State<BubbleGrid>
     return listItems;
   }
 
-  @override
+    @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Wrap(
-        runSpacing: 16.0,
-        spacing: 16.0,
-        children: _buildListItems(),
-      ),
+    int count = (MediaQuery.sizeOf(context).width / 370).floor() + 1;
+    return GridView.count(
+      crossAxisCount: count,
+      children: _buildListItems(),
     );
   }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   return Padding(
+  //     padding: const EdgeInsets.all(32.0),
+  //     child: Wrap(
+  //       runSpacing: 32.0,
+  //       spacing: 32.0,
+  //       children: _buildListItems(),
+  //     ),
+  //   );
+  // }
 }

@@ -9,21 +9,24 @@ class HabitDataService {
   Future<HashMap<int, Habit>> getUserHabits() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-    // prefs.clear();
+    prefs.clear();
 
     HashMap<int, Habit> userHabits = HashMap<int, Habit>();
 
     final List<String>? habitIds = prefs.getStringList('habits');
 
     if (habitIds == null ) {
-      // // Longest Streak: 3, Current Streak: 1
-      // Habit testWeek = Habit(0, 'Week Test', Frequency.weekly, DurationType.hours, 2, [20250101, 20250108, 20250115, 20250201, 20250202, 20250214], 20250101);
-      // // Longest Streak: 3, Current Streak: 3
-      // Habit testMonth = Habit(1, 'Month Test', Frequency.monthly, DurationType.minutes, null, [20241101, 20241201, 20250101, 20250214], 20241001);
+      // Longest Streak: 3, Current Streak: 1
+      Habit testWeek = Habit(0, 'Week Test', Frequency.weekly, DurationType.hours, 2, [20250101, 20250108, 20250115, 20250201, 20250202, 20250214], 20250101);
+      // Longest Streak: 3, Current Streak: 3
+      Habit testMonth = Habit(1, 'Month Test', Frequency.monthly, DurationType.minutes, null, [20241101, 20241201, 20250101, 20250214], 20241001);
       
-      // userHabits.putIfAbsent(0, () => testWeek);
-      // userHabits.putIfAbsent(1, () => testMonth);
-      
+      Habit testDay = Habit(2, 'Day Test', Frequency.daily, DurationType.minutes, null, [20241101, 20241201, 20250101, 20250210, 20250211, 20250212, 20250213, 20250220, 20250221, 20250222], 20241001);
+
+      userHabits.putIfAbsent(0, () => testWeek);
+      userHabits.putIfAbsent(1, () => testMonth);
+      userHabits.putIfAbsent(2, () => testDay);
+
       return userHabits;
     }
 

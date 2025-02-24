@@ -192,7 +192,7 @@ class AddHabitFormState extends State<AddHabitForm> with SingleTickerProviderSta
                                                         }
                                                       }),
                                                   FilterChip.elevated(
-                                                      label: Text('Monthy'),
+                                                      label: Text('Monthly'),
                                                       selected:
                                                           _selectedFrequency ==
                                                               (Frequency

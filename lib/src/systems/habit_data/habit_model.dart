@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:core';
-import 'dart:math';
 
 import 'package:habitual/src/datetime_parse.dart';
 
@@ -106,64 +105,52 @@ class Habit {
   /// Return the integer length of the current streak 
   int getCurrentStreak() {
     if (datesCompleted.isEmpty) return 0;
-    if (datesCompleted.length == 1) return 1;
 
     datesCompleted.sort();
 
-    if (frequency == Frequency.daily) {
-      // Binary search
-      DateTime currentDate = intToDateTime(datesCompleted.last);
-      int datesLength = datesCompleted.length - 1;
-      int last = (datesLength / 2).floor();
-      int current = 0;
-
-      while(intToDateTime(datesCompleted[current]).add(Duration(days: datesLength - current)) != currentDate) {
-        current += last;
-        last = max((last / 2).floor(), 1);
+    switch (frequency) {
+        case Frequency.daily:
+          if ( datesCompleted.last != dateTimeNowToInt()) return 0;
+        break;
+        case Frequency.weekly:
+          if (!isInThisWeek( datesCompleted.last)) return 0;
+        break;
+        case Frequency.monthly:
+          if (!isInThisMonth( datesCompleted.last)) return 0;
+        break;
+        default:
       }
 
-      if (current != datesLength) {
-        while (intToDateTime(datesCompleted[current]).subtract(Duration(days: datesLength - current)) == currentDate) {
-          current -= 1;
-        }
+    int currentStreak = 1;
+
+    DateTime currentDate = intToDateTime(datesCompleted.last);
+
+    for (int i = datesCompleted.length - 1; i > 0; --i) {
+      DateTime nextDate = intToDateTime(datesCompleted[i - 1]);
+      bool check = false;
+
+      switch (frequency) {
+        case Frequency.daily:
+          check = nextDate == currentDate.subtract(Duration(days: 1));
+        break;
+        case Frequency.weekly:
+          check = isInPreviousWeek(currentDate, nextDate);
+        break;
+        case Frequency.monthly:
+          check = isInPreviousMonth(currentDate, nextDate);
+        break;
+        default:
       }
 
-      return datesCompleted.length - current;
-    } else if (frequency == Frequency.weekly) {
-      DateTime currentDate = intToDateTime(datesCompleted.last);
-      int currentStreak = 1;
-
-      for (int i = datesCompleted.length - 1; i > 0; --i) {
-        DateTime nextDate = intToDateTime(datesCompleted[i - 1]);
-
-        if (isInPreviousWeek(currentDate, nextDate) ) {
-          currentStreak += 1;
-          currentDate = nextDate;
-        } else {
-          break;
-        }
+      if (check ) {
+        currentStreak += 1;
+        currentDate = nextDate;
+      } else {
+        break;
       }
-
-      return currentStreak;
-    } else if (frequency == Frequency.monthly) {
-      DateTime currentDate = intToDateTime(datesCompleted.last);
-      int currentStreak = 1;
-
-      for (int i = datesCompleted.length - 1; i > 0; --i) {
-        DateTime nextDate = intToDateTime(datesCompleted[i - 1]);
-
-        if (isInPreviousMonth(currentDate, nextDate) ) {
-          currentStreak += 1;
-          currentDate = nextDate;
-        } else {
-          break;
-        }
-      }
-
-      return currentStreak;
     }
-    
-    return 0;
+
+    return currentStreak;
   }
 
     /// Return the integer length of the l
@@ -176,14 +163,14 @@ class Habit {
     int currentStreak = 1;
     int maxStreak = 0;
 
-    DateTime currentDate = intToDateTime(datesCompleted.first);
+    DateTime currentDate = intToDateTime(datesCompleted[0]);
 
     for (int i = 0; i < datesCompleted.length - 1; ++i) {
       DateTime nextDate = intToDateTime(datesCompleted[i + 1]);
       bool check = false;
       switch (frequency) {
         case Frequency.daily:
-          nextDate == currentDate.add(Duration(days: 1));
+          check = nextDate == currentDate.add(Duration(days: 1));
         break;
         case Frequency.weekly:
           check = isInNextWeek(currentDate, nextDate);
@@ -206,6 +193,8 @@ class Habit {
         }
         currentStreak = 1;
       }
+
+      currentDate = nextDate;
     }
     
     return maxStreak;
@@ -215,8 +204,9 @@ class Habit {
     if (datesCompleted.isEmpty) return false;
 
     DateTime today = checkDate.toLocal();
-    DateTime firstOfWeekDT = today.subtract(Duration(days: today.weekday));
-    DateTime endOfWeekDT = today.add(Duration(days: 7- today.weekday));
+    int currentWeekday = checkDate.weekday == 7 ? 1 : checkDate.weekday + 1;
+    DateTime firstOfWeekDT = today.subtract(Duration(days: currentWeekday));
+    DateTime endOfWeekDT = today.add(Duration(days: 7 - currentWeekday));
     int currentDate = dateTimeToInt(today);
 
     int firstOfYear = today.year * 10000;

@@ -59,6 +59,7 @@ late AnimationController _animationController;
         );
       },
       child: NavigationRail(
+        minWidth: 100,
         selectedIndex: widget.selectedIndex,
         backgroundColor: colorScheme.primaryContainer,
         onDestinationSelected: widget.onDestinationSelected,

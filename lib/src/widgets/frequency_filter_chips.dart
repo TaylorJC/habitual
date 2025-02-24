@@ -50,7 +50,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
                   } else {
                     selectedFrequencies.remove(Frequency.daily);
                   }
-
+      
                   widget.onFrequencyChange(selectedFrequencies);
                 });
               }
@@ -68,7 +68,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
                   } else {
                     selectedFrequencies.remove(Frequency.weekly);
                   }
-
+      
                   widget.onFrequencyChange(selectedFrequencies);
                 });
               }
@@ -86,7 +86,7 @@ class _FrequencyFilterChipsState extends State<FrequencyFilterChips> {
                   } else {
                     selectedFrequencies.remove(Frequency.monthly);
                   }
-
+      
                   widget.onFrequencyChange(selectedFrequencies);
                 });
               }

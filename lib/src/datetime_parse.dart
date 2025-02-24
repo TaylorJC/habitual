@@ -39,6 +39,16 @@ String dateTimeIntToYMDString(int dateTimeInt) {
   return dateTimeToYMDString(dateTime);
 }
 
+bool isInThisMonth(int checkDate) {
+  int firstOfYear = DateTime.now().year * 10000;
+  int firstOfMonth = firstOfYear + (DateTime.now().month * 100);
+  int endOfMonth = firstOfMonth + 31;
+
+
+  return checkDate >= firstOfMonth && checkDate <= endOfMonth;
+}
+
+
 bool isInPreviousMonth(DateTime currentDate, DateTime nextDate) {
   DateTime previousMonth = currentDate.subtract(Duration(days: currentDate.day + 1));
 
@@ -61,6 +71,17 @@ bool isInNextMonth(DateTime currentDate, DateTime nextDate) {
   int nextDateInt = dateTimeToInt(nextDate);
 
   return nextDateInt > firstOfMonth && nextDateInt <= endOfMonth;
+}
+
+bool isInThisWeek(int checkDate) {
+  //  Make Sunday the first day of the week
+  int currentWeekday = DateTime.now().weekday == 7 ? 1 : DateTime.now().weekday + 1;
+  DateTime firstOfWeekDT = DateTime.now().subtract(Duration(days: currentWeekday));
+
+  int firstOfWeek = firstOfWeekDT.year * 10000 + firstOfWeekDT.month * 100 + firstOfWeekDT.day;
+  int endOfWeek = firstOfWeek + 7;
+
+  return checkDate >= firstOfWeek && checkDate < endOfWeek;
 }
 
 bool isInPreviousWeek(DateTime currentDate, DateTime nextDate) {

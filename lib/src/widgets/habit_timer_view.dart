@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/material.dart';
 import 'package:habitual/src/systems/habit_data/habit_data_controller.dart';
@@ -73,7 +75,7 @@ class _HabitTimerViewState extends State<HabitTimerView>
     return Center(
       child: SingleChildScrollView(
         child: SizedBox(
-          width: 400,
+          width: MediaQuery.sizeOf(context).width - 100,
           child: AnimatedBuilder(
             animation: _animationController,
             builder: (context, child) {
@@ -92,7 +94,7 @@ class _HabitTimerViewState extends State<HabitTimerView>
             },
             child: Center(
               child: SizedBox(
-                width: 350,
+                width: 400,
                 child: Card(
                   color: colorScheme.surfaceContainer,
                   margin: EdgeInsets.all(24),
@@ -146,8 +148,8 @@ class _HabitTimerViewState extends State<HabitTimerView>
                               children: [
                                   CircularCountDownTimer(
                                     controller: _countDownController,
-                                    width: MediaQuery.of(context).size.shortestSide / 3,
-                                    height: MediaQuery.of(context).size.shortestSide / 3,
+                                    width: max(MediaQuery.of(context).size.width / 3, 150),
+                                    height: max(MediaQuery.of(context).size.height / 3, 150),
                                     autoStart: false,
                                     isReverse: true,
                                     isReverseAnimation: false,
@@ -168,10 +170,9 @@ class _HabitTimerViewState extends State<HabitTimerView>
                                 Padding(
                                   padding:
                                       const EdgeInsets.fromLTRB(12, 24, 12, 0),
-                                  child: Row(
+                                  child: Wrap(
                                     spacing: 24,
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    runSpacing: 24,
                                     children: [
                                       ElevatedButton.icon(
                                           onPressed: () {
@@ -206,7 +207,7 @@ class _HabitTimerViewState extends State<HabitTimerView>
                                   ),
                                 )
                               ],
-                            ) : SizedBox( width: 400, child: Center(child: Text('Complete!', ))),
+                            ) : SizedBox( width: MediaQuery.sizeOf(context).width - 100, child: Center(child: Text('Complete!', ))),
                           ),
                         ),
                       ),

@@ -124,7 +124,7 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
   Widget build(BuildContext context) {
     ColorScheme colorScheme = Theme.of(context).colorScheme;
     final TextStyle onPrimaryStyle = TextStyle(
-      fontSize: 14, 
+      fontSize: 13, 
       fontWeight: FontWeight.bold,
       color: colorScheme.onPrimary,
       overflow: TextOverflow.ellipsis,
@@ -187,22 +187,29 @@ class FluidFillingContainerState extends State<FluidFillingContainer> with Ticke
                           borderRadius: BorderRadius.circular(8),
                           color: colorScheme.primary,
                         ),
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints.loose(Size.square(80)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(widget.selectedHabit.title, style: onPrimaryStyle, maxLines: 3,),
-                              if (widget.selectedHabit.duration != null)
-                                Text('${widget.selectedHabit.duration} ${widget.selectedHabit.durationType.name}', style: TextStyle(
-                fontSize: 12, 
-                fontWeight: FontWeight.bold,
-                color: colorScheme.onPrimary,
-                overflow: TextOverflow.ellipsis,
-              ), maxLines: 1,),
-                            ],
-                          )),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            return ConstrainedBox(
+                              constraints: BoxConstraints.loose(Size.square(constraints.maxWidth - 60)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(widget.selectedHabit.title, textAlign: TextAlign.center, style: onPrimaryStyle, maxLines: 3,),
+                                  if (widget.selectedHabit.duration != null)
+                                    Text('${widget.selectedHabit.duration} ${widget.selectedHabit.durationType.name}', textAlign: TextAlign.center, style: TextStyle(
+                                            fontSize: 11, 
+                                            fontWeight: FontWeight.bold,
+                                            
+                                            color: colorScheme.onPrimary,
+                                            overflow: TextOverflow.ellipsis,
+                                          ), maxLines: 1,),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),

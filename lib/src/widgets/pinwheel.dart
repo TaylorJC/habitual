@@ -23,7 +23,7 @@ class PinwheelSpinnerState extends State<PinwheelSpinner>
   void initState() {
     super.initState();
 
-    final spinDurationSecs = (5 - widget.speed) * 2;
+    final spinDurationSecs = (5 - widget.speed) * 2 + 1;
 
     _controller = AnimationController(
       duration: Duration(seconds: spinDurationSecs),// Spin duration
