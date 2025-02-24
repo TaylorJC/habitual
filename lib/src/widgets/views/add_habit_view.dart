@@ -162,6 +162,8 @@ class AddHabitFormState extends State<AddHabitForm> with SingleTickerProviderSta
                                               child: Wrap(
                                                 spacing: 8.0,
                                                 runSpacing: 8.0,
+                                                runAlignment: WrapAlignment.center,
+                                                alignment: WrapAlignment.center,
                                                 children: [
                                                   FilterChip.elevated(
                                                       label: Text('Daily'),
@@ -257,6 +259,8 @@ class AddHabitFormState extends State<AddHabitForm> with SingleTickerProviderSta
                                         child: Wrap(
                                           spacing: 8.0,
                                           runSpacing: 8.0,
+                                          runAlignment: WrapAlignment.center,
+                                                alignment: WrapAlignment.center,
                                           children: [
                                             FilterChip.elevated(
                                                 label: Text('Seconds'),

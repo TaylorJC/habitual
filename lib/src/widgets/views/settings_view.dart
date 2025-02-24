@@ -100,6 +100,8 @@ class SettingsViewState extends State<SettingsView> with SingleTickerProviderSta
                       //   ConstrainedBox(constraints: BoxConstraints(minWidth: 100), child: Text('Theme Mode', style: optionStyle)),
                       title:
                         Wrap(
+                          runAlignment: WrapAlignment.center,
+                          alignment: WrapAlignment.center,
                           children: [
                             Padding(
                               padding: const EdgeInsets.all(5.0),
@@ -175,6 +177,8 @@ class SettingsViewState extends State<SettingsView> with SingleTickerProviderSta
                       // leading: 
                       //   ConstrainedBox(constraints: BoxConstraints(minWidth: 100), child: Text('Theme Color', style: optionStyle)),
                       title: Wrap(
+                        runAlignment: WrapAlignment.start,
+                          alignment: WrapAlignment.center,
                         children: List<Widget>.generate(
                           colorChoiceNames.length,
                           (int index) {

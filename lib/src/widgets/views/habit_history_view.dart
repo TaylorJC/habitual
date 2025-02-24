@@ -102,6 +102,7 @@ class _HabitHistoryViewState extends State<HabitHistoryView>
                     width: 200,
                     child: Center(
                       child: Text(widget.habit.title,
+                      textAlign: TextAlign.center,
                           maxLines: 3,
                           style: TextStyle(
                               color: colorScheme.onPrimaryContainer, fontSize: 16)),
@@ -111,6 +112,7 @@ class _HabitHistoryViewState extends State<HabitHistoryView>
                     Text(
                         '${widget.habit.duration} ${widget.habit.durationType.name}',
                         maxLines: 2,
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             color: colorScheme.onPrimaryContainer,
                             fontSize: 12)),

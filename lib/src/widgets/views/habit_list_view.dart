@@ -196,6 +196,7 @@ class HabitsViewState extends State<HabitsView> with TickerProviderStateMixin {
                           children: [
                             Text(userHabits[i].title,
                                 maxLines: 3,
+                                textAlign: TextAlign.center,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: colorScheme.onPrimaryContainer,
@@ -203,6 +204,7 @@ class HabitsViewState extends State<HabitsView> with TickerProviderStateMixin {
                             if (userHabits[i].duration != null)
                               Text('${userHabits[i].duration} ${userHabits[i].durationType.name}',
                                 maxLines: 2,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(
                                     color: colorScheme.onPrimaryContainer,
                                     fontSize: 12)),
