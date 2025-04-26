@@ -1,8 +1,12 @@
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:habitual/src/systems/habit_data/habit_data_service.dart';
 import 'package:habitual/src/systems/habit_data/habit_model.dart';
+import 'package:habitual/src/systems/habit_data/habit_store.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// A class that many Widgets can interact with to read user settings, update
 /// user settings, or listen to user settings changes.
@@ -64,4 +68,38 @@ class HabitDataController with ChangeNotifier {
     // SettingService.
     await _habitService.removeHabit(habit);
   }
+
+  Future<bool> importHabits(String path) async {
+    HashMap<int, Habit>? habits = await _habitService.getUserHabitsFromStore(path);
+
+    if (habits == null) {
+      return false;
+    }
+
+    _userHabits = habits;
+    _habitList = List.from(_userHabits.values);
+
+    // Important! Inform listeners a change has occurred.
+    notifyListeners();
+
+    return true;
+  }
+
+  Future<String> exportHabits() async {
+    // Serialize all loaded habits and write to the downloads folder.
+    HabitStore habitStore = HabitStore(_habitList);
+
+    String habitStorejson = habitStore.toJson();
+
+    final directory = await getApplicationDocumentsDirectory();
+    final path = directory.path;
+
+    final saveFile = File('$path/habitData.json');
+
+    saveFile.writeAsString(habitStorejson);
+
+    return saveFile.path;
+  }
+
+
 }

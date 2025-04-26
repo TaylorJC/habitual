@@ -17,6 +17,7 @@ enum AppState {
   addForm,
   historyForm,
   timerForm,
+  exportImportForm,
 }
 
 class Habitual extends StatefulWidget {
@@ -35,7 +36,8 @@ class Habitual extends StatefulWidget {
   }
 }
 
-class HabitualState extends State<Habitual> with SingleTickerProviderStateMixin {
+class HabitualState extends State<Habitual>
+    with SingleTickerProviderStateMixin {
   int selectedIndex = 0;
 
   AppState _state = AppState.main;
@@ -46,7 +48,7 @@ class HabitualState extends State<Habitual> with SingleTickerProviderStateMixin 
   final Key formKey = UniqueKey();
   Habit? _selectedHabit = null;
   late DateTime _selectedDate = DateTime.now();
-  
+
   @override
   void initState() {
     super.initState();
@@ -76,141 +78,199 @@ class HabitualState extends State<Habitual> with SingleTickerProviderStateMixin 
   Widget build(BuildContext context) {
     return ListenableBuilder(
       listenable: widget.settingsController,
-      builder: (BuildContext context, Widget? child) => 
-        MaterialApp(
-            title: 'Habitual',
-            theme: ThemeData(
+      builder: (BuildContext context, Widget? child) => MaterialApp(
+          title: 'Habitual',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(
+                seedColor: widget.settingsController.themeColor),
+            useMaterial3: true,
+          ),
+          darkTheme: ThemeData.from(
               colorScheme: ColorScheme.fromSeed(
-                  seedColor: widget.settingsController.themeColor),
-              useMaterial3: true,
-            ),
-            darkTheme: ThemeData.from(
-                colorScheme: ColorScheme.fromSeed(
-                    seedColor: widget.settingsController.themeColor,
-                    brightness: Brightness.dark)),
-            themeMode: widget.settingsController.themeMode,
-            home: Builder(builder: (context) {
-              return Scaffold(
-                backgroundColor: Theme.of(context).colorScheme.surface,
-                body: Row(
-                  children: [
-                    if (wideScreen)
-                      DisappearingNavigationRail(
-                        selectedIndex: selectedIndex,
-                        title: 'Habitual',
-                        destinations: [
-                          NavigationRailDestination(
-                            icon: Icon(Icons.home, color: Theme.of(context).colorScheme.onPrimaryContainer,), 
-                            label: Text("Home", style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer,),)),
+                  seedColor: widget.settingsController.themeColor,
+                  brightness: Brightness.dark)),
+          themeMode: widget.settingsController.themeMode,
+          home: Builder(builder: (context) {
+            return Scaffold(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              body: Row(
+                children: [
+                  if (wideScreen)
+                    DisappearingNavigationRail(
+                      selectedIndex: selectedIndex,
+                      title: 'Habitual',
+                      destinations: [
                         NavigationRailDestination(
-                            icon: Icon(Icons.list_alt_sharp, color: Theme.of(context).colorScheme.onPrimaryContainer,), label: Text("Habits", style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer,),)),
+                            icon: Icon(
+                              Icons.home,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                            label: Text(
+                              "Home",
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                            )),
                         NavigationRailDestination(
-                            icon: Icon(Icons.settings, color: Theme.of(context).colorScheme.onPrimaryContainer,), label: Text("Settings", style: TextStyle(color: Theme.of(context).colorScheme.onPrimaryContainer,),)),
-                        ],
-                        onDestinationSelected: (index) {
-                          setState(() {
-                            selectedIndex = index;
-                            _selectedHabit = null;
-                            _state = AppState.main;
-                          });
-                        },
-                      ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: MediaQuery.paddingOf(context).top),
-                        child: Card(
-                          child: Builder(builder: (context) {
-                            if (_state == AppState.addForm) {
-                              return AnimatedBuilder(
-                                animation: _formAnimationController,
-                                builder: (context, child) {
-                                  final animationPercent = Curves.fastEaseInToSlowEaseOut.transform(_formAnimationController.value);
-                                  final opacity = _formAnimationController.value;
-                                  final slideDistance = (1.0 - animationPercent) * 150;
-                                                      
-                                  return Opacity(
-                                    opacity: opacity,
-                                    child: Transform.translate(
-                                      offset: Offset(slideDistance, 0),
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                child: AddHabitForm(
+                            icon: Icon(
+                              Icons.list_alt_sharp,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                            label: Text(
+                              "Habits",
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                            )),
+                        NavigationRailDestination(
+                            icon: Icon(
+                              Icons.settings,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onPrimaryContainer,
+                            ),
+                            label: Text(
+                              "Settings",
+                              style: TextStyle(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                              ),
+                            )),
+                      ],
+                      onDestinationSelected: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                          _selectedHabit = null;
+                          _state = AppState.main;
+                        });
+                      },
+                    ),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: MediaQuery.paddingOf(context).top),
+                      child: Card(
+                        child: Builder(builder: (context) {
+                          if (_state == AppState.addForm) {
+                            return AnimatedBuilder(
+                              animation: _formAnimationController,
+                              builder: (context, child) {
+                                final animationPercent = Curves
+                                    .fastEaseInToSlowEaseOut
+                                    .transform(_formAnimationController.value);
+                                final opacity = _formAnimationController.value;
+                                final slideDistance =
+                                    (1.0 - animationPercent) * 150;
+
+                                return Opacity(
+                                  opacity: opacity,
+                                  child: Transform.translate(
+                                    offset: Offset(slideDistance, 0),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: AddHabitForm(
                                 key: formKey,
                                 habitDataController: widget.habitDataController,
                                 editingHabit: _selectedHabit,
                                 onSubmit: (value) {
-                                  _formAnimationController.reverse().whenComplete(() {
-                                  setState(() {
-                                    _state = AppState.main;
-                                    _selectedHabit = null;
-                                  });
-                                });
-                                },
-                                ),
-                              );
-                            }
-                          if (_state == AppState.historyForm) {
-                            return AnimatedBuilder(
-                              animation: _formAnimationController,
-                                builder: (context, child) {
-                                  final animationPercent = Curves.fastOutSlowIn.transform(_formAnimationController.value);
-                                  final opacity = _formAnimationController.value;
-                                  final slideDistance = (-1.0 + animationPercent) * 150;
-                            
-                                  return Opacity(
-                                    opacity: opacity,
-                                    child: Transform.translate(
-                                      offset: Offset(0, slideDistance),
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                              child: HabitHistoryView(habit: _selectedHabit!, onClose: () {
-                                _formAnimationController.reverse().whenComplete(() {
-                                      setState(() {
-                                        _state = AppState.main;
-                                        _selectedHabit = null;
-                                      });
+                                  _formAnimationController
+                                      .reverse()
+                                      .whenComplete(() {
+                                    setState(() {
+                                      _state = AppState.main;
+                                      _selectedHabit = null;
                                     });
-                              },
-                              onEdit: () {
-                                setState(() {
-                                  _state = AppState.addForm;
-                                });
-                              },
+                                  });
+                                },
                               ),
                             );
                           }
-                          
+                          if (_state == AppState.historyForm) {
+                            return AnimatedBuilder(
+                              animation: _formAnimationController,
+                              builder: (context, child) {
+                                final animationPercent = Curves.fastOutSlowIn
+                                    .transform(_formAnimationController.value);
+                                final opacity = _formAnimationController.value;
+                                final slideDistance =
+                                    (-1.0 + animationPercent) * 150;
+
+                                return Opacity(
+                                  opacity: opacity,
+                                  child: Transform.translate(
+                                    offset: Offset(0, slideDistance),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: HabitHistoryView(
+                                habit: _selectedHabit!,
+                                onClose: () {
+                                  _formAnimationController
+                                      .reverse()
+                                      .whenComplete(() {
+                                    setState(() {
+                                      _state = AppState.main;
+                                      _selectedHabit = null;
+                                    });
+                                  });
+                                },
+                                onEdit: () {
+                                  setState(() {
+                                    _state = AppState.addForm;
+                                  });
+                                },
+                              ),
+                            );
+                          }
+
                           if (_state == AppState.timerForm) {
                             return AnimatedBuilder(
                               animation: _formAnimationController,
-                                builder: (context, child) {
-                                  final animationPercent = Curves.fastOutSlowIn.transform(_formAnimationController.value);
-                                  final opacity = _formAnimationController.value;
-                                  final slideDistance = (-1.0 + animationPercent) * 150;
-                            
-                                  return Opacity(
-                                    opacity: opacity,
-                                    child: Transform.translate(
-                                      offset: Offset(0, slideDistance),
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                              child: HabitTimerView(habit: _selectedHabit!, habitDataController: widget.habitDataController, date: _selectedDate, onClose: () {
-                                _formAnimationController.reverse().whenComplete(() {
-                                      setState(() {
-                                        _state = AppState.main;
-                                        _selectedHabit = null;
-                                      });
+                              builder: (context, child) {
+                                final animationPercent = Curves.fastOutSlowIn
+                                    .transform(_formAnimationController.value);
+                                final opacity = _formAnimationController.value;
+                                final slideDistance =
+                                    (-1.0 + animationPercent) * 150;
+
+                                return Opacity(
+                                  opacity: opacity,
+                                  child: Transform.translate(
+                                    offset: Offset(0, slideDistance),
+                                    child: child,
+                                  ),
+                                );
+                              },
+                              child: HabitTimerView(
+                                habit: _selectedHabit!,
+                                habitDataController: widget.habitDataController,
+                                date: _selectedDate,
+                                onClose: () {
+                                  _formAnimationController
+                                      .reverse()
+                                      .whenComplete(() {
+                                    setState(() {
+                                      _state = AppState.main;
+                                      _selectedHabit = null;
                                     });
-                              },),
+                                  });
+                                },
+                              ),
                             );
                           }
-                          
+
                           if (_state == AppState.main) {
                             return Container(
                               color: Theme.of(context).colorScheme.surface,
@@ -223,97 +283,115 @@ class HabitualState extends State<Habitual> with SingleTickerProviderStateMixin 
                                         setState(() {
                                           _selectedHabit = habit;
                                           _state = AppState.timerForm;
-                                          _formAnimationController.forward(from: 0.0);
+                                          _formAnimationController.forward(
+                                              from: 0.0);
                                         });
                                       },
                                       onDateChange: (newDate) {
                                         setState(() {
                                           _selectedDate = newDate;
                                         });
-                                      }
-                                  );
+                                      });
                                 } else if (selectedIndex == 1) {
                                   return HabitsView(
-                                      habitDataController:
-                                          widget.habitDataController,
-                                      onHabitSelected: (habit) {
-                                        setState(() {
-                                          _selectedHabit = habit;
-                                          _state = AppState.historyForm;
-                                          _formAnimationController.forward(from: 0.0);
-                                        });
-                                      },
-                                    );
+                                    habitDataController:
+                                        widget.habitDataController,
+                                    onHabitSelected: (habit) {
+                                      setState(() {
+                                        _selectedHabit = habit;
+                                        _state = AppState.historyForm;
+                                        _formAnimationController.forward(
+                                            from: 0.0);
+                                      });
+                                    },
+                                  );
                                 } else if (selectedIndex == 2) {
                                   return SettingsView(
-                                      settingsController:
-                                          widget.settingsController
+                                    settingsController:
+                                        widget.settingsController,
+                                    habitDataController:
+                                        widget.habitDataController,
                                   );
                                 }
-                                                      
+
                                 return SettingsView(
-                                    settingsController:
-                                        widget.settingsController);
+                                  settingsController: widget.settingsController,
+                                  habitDataController:
+                                      widget.habitDataController,
+                                );
                               }),
                             );
                           }
-                          
+
                           return Container();
-                          }),
-                        ),
+                        }),
                       ),
                     ),
-                  ],
-                ),
-                floatingActionButton: AnimatedBuilder(
-                  animation: _formAnimationController,
-                  builder: (context, child) {
-                    return AnimatedRotation(
-                      turns: _selectedHabit  == null ? 0 : 1, 
-                      duration: Duration(milliseconds: 400),
-                      child: child,
-                    );
-                  },
-                  child: AddActionButton(
-                          habitDataController: widget.habitDataController,
-                          selectedHabit: _selectedHabit,
-                          turnState: _state == AppState.addForm,
-                          onChanged: (formState) {
-                            if (formState) {
-                              setState(() {
-                                  _state = AppState.addForm;
-                                });
-                              _formAnimationController.forward();
-                            } else {
-                              _formAnimationController.reverse();
-                              setState(() {
-                                  _state = AppState.main;
-                                  _selectedHabit = null;
-                                });
-                            }
-                            
-                          }),
-                ),
-                bottomNavigationBar: wideScreen
-                    ? null
-                    : DisappearringNavBar(
-                        selectedIndex: selectedIndex,
-                        destinations: [
-                          NavigationDestination(icon: Icon(Icons.home, color: Theme.of(context).colorScheme.onPrimaryContainer), label: "Home"),
-                          NavigationDestination(
-                              icon: Icon(Icons.list_alt_sharp, color: Theme.of(context).colorScheme.onPrimaryContainer), label: "Habits"),
-                          NavigationDestination(icon: Icon(Icons.settings, color: Theme.of(context).colorScheme.onPrimaryContainer), label: "Settings"),
-                        ],
-                        onDestinationSelected: (index) {
-                          setState(() {
-                            selectedIndex = index;
-                            _selectedHabit = null;
-                            _state = AppState.main;
-                          });
-                        },
-                      ),
-              );
-            })),
+                  ),
+                ],
+              ),
+              floatingActionButton: AnimatedBuilder(
+                animation: _formAnimationController,
+                builder: (context, child) {
+                  return AnimatedRotation(
+                    turns: _selectedHabit == null ? 0 : 1,
+                    duration: Duration(milliseconds: 400),
+                    child: child,
+                  );
+                },
+                child: AddActionButton(
+                    habitDataController: widget.habitDataController,
+                    selectedHabit: _selectedHabit,
+                    turnState: _state == AppState.addForm,
+                    onChanged: (formState) {
+                      if (formState) {
+                        setState(() {
+                          _state = AppState.addForm;
+                        });
+                        _formAnimationController.forward();
+                      } else {
+                        _formAnimationController.reverse();
+                        setState(() {
+                          _state = AppState.main;
+                          _selectedHabit = null;
+                        });
+                      }
+                    }),
+              ),
+              bottomNavigationBar: wideScreen
+                  ? null
+                  : DisappearringNavBar(
+                      selectedIndex: selectedIndex,
+                      destinations: [
+                        NavigationDestination(
+                            icon: Icon(Icons.home,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer),
+                            label: "Home"),
+                        NavigationDestination(
+                            icon: Icon(Icons.list_alt_sharp,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer),
+                            label: "Habits"),
+                        NavigationDestination(
+                            icon: Icon(Icons.settings,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer),
+                            label: "Settings"),
+                      ],
+                      onDestinationSelected: (index) {
+                        setState(() {
+                          selectedIndex = index;
+                          _selectedHabit = null;
+                          _state = AppState.main;
+                        });
+                      },
+                    ),
+            );
+          })),
     );
   }
 }

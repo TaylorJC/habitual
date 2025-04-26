@@ -41,6 +41,8 @@ dependencies:
   circular_countdown_timer: ^0.2.4
   flutter_launcher_icons: ^0.14.3
   icons_launcher: ^3.0.0
+  path_provider: ^2.1.5
+  filesystem_picker: ^4.1.0
 
 dev_dependencies:
   flutter_test:

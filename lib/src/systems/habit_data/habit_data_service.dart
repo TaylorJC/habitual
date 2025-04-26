@@ -1,14 +1,19 @@
 import 'dart:collection';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:habitual/src/systems/habit_data/habit_model.dart';
+import 'package:habitual/src/systems/habit_data/habit_store.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A service that stores and retrieves user habit data.
 class HabitDataService {
-  /// Loads the User's preferred ThemeMode from local or remote storage.
+  /// Loads the user's habit data from local or remote storage.
   Future<HashMap<int, Habit>> getUserHabits() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    prefs.clear();
 
     HashMap<int, Habit> userHabits = HashMap<int, Habit>();
 
@@ -43,6 +48,24 @@ class HabitDataService {
     }
 
     return userHabits;
+    
+  }
+
+  Future<HashMap<int, Habit>?> getUserHabitsFromStore(String path) async {
+    try {
+      String habitJsonData = await File(path).readAsString();
+      HabitStore habitStore = HabitStore.fromJson(habitJsonData);
+
+      HashMap<int, Habit> userHabits = HashMap<int, Habit>();
+
+      for (var habit in habitStore.habits) {
+        userHabits.putIfAbsent(habit.id, () => habit);
+      }
+
+      return userHabits;
+    } catch (e) {
+      return null;
+    }
     
   }
 

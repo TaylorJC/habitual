@@ -1,15 +1,18 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:habitual/src/systems/habit_data/habit_data_controller.dart';
 import 'package:habitual/src/systems/settings/settings_controller.dart';
+import 'package:filesystem_picker/filesystem_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class SettingsView extends StatefulWidget {
   const SettingsView({
     super.key,
     required this.settingsController,
+    required this.habitDataController,
   });
 
   final SettingsController settingsController;
+  final HabitDataController habitDataController;
 
   @override
   State<SettingsView> createState() {
@@ -196,6 +199,78 @@ class SettingsViewState extends State<SettingsView> with SingleTickerProviderSta
                           }),
                         ),
                     ),
+                    Divider(
+                      indent: 16,
+                      endIndent: 16,
+                    ),
+                    ListTile(
+                      title: Wrap(
+                        alignment: WrapAlignment.center,
+                        spacing: 8.0,
+                        runAlignment: WrapAlignment.center,
+                        children: [
+                          ElevatedButton.icon(style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.primaryContainer,
+                foregroundColor: colorScheme.onPrimaryContainer,
+              ), onPressed: () {
+                            showDialog<bool>(context: context, builder: (context) {
+                              return AlertDialog(title: Text('Backup data?'), actionsAlignment: MainAxisAlignment.center, 
+                              actions: [
+                                ElevatedButton(onPressed: () {Navigator.of(context).pop(true);}, child: Text('Backup')),
+                                ElevatedButton(onPressed: () {Navigator.of(context).pop(false);}, child: Text('Cancel')),
+                              ],);
+                            }).then( (result) async {
+                              if (result != null && result) {
+                                final savePath = await widget.habitDataController.exportHabits();
+
+                                if (context.mounted) {
+                                  // Display snackbar annoucing export
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: Text('Success: Data exported to $savePath'),
+                                  ));
+                                }
+                              }
+                            });
+                            // Ask where to save data
+                          }, icon: Icon(Icons.download), label: Text('Backup Data', textAlign: TextAlign.center,)),
+                          ElevatedButton.icon(style: ElevatedButton.styleFrom(
+                backgroundColor: colorScheme.tertiaryContainer,
+                foregroundColor: colorScheme.onTertiaryContainer,
+              ), icon: Icon(Icons.upload), label: Text('Restore Data'), onPressed: () {
+                            String? chosenPath;
+                            showDialog<bool>(context: context, builder: (context) {
+                              return AlertDialog(title: Text('Restore data from file?'), actionsAlignment: MainAxisAlignment.center, 
+                              content: Text('Caution: This will overwrite your existing data.', style: TextStyle(color: Colors.red),),
+                              actions: [
+                                ElevatedButton(onPressed: () async {
+                                  chosenPath = await FilesystemPicker.open(context: context, rootDirectory: await getApplicationDocumentsDirectory(), fsType: FilesystemType.file, title: 'Select data file', allowedExtensions: ['.json']);
+                                  Navigator.of(context).pop(true);}, child: Text('Select File')),
+                                ElevatedButton(onPressed: () {Navigator.of(context).pop(false);}, child: Text('Cancel')),
+                              ],);
+                            }).then( (result) async {
+                              if (result != null && result && chosenPath != null) {
+                                final didImport = await widget.habitDataController.importHabits(chosenPath!);
+
+                                if (context.mounted) {
+                                  if (didImport) {
+                                    // Display snackbar annoucing import
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: const Text('Success: Data restored'),
+                                  ));
+                                  } else {
+                                    // Display snackbar annoucing import
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    content: const Text('Error Bad Data: Data restoration failed'),
+                                  ));
+                                  }
+                                  
+                                }
+                              }
+                            });
+                          })
+                        ],
+                      )
+                    )
                   ],
                 ),
             ),
